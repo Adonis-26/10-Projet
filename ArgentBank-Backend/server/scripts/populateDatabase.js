@@ -1,5 +1,5 @@
-const axios = require('axios')
-const signupApi = 'http://localhost:3001/api/v1/user/signup'
+const axios = require('axios');
+const signupApi = 'http://localhost:3001/api/v1/user/signup';
 
 const users = [
   {
@@ -16,11 +16,27 @@ const users = [
     password: 'password456',
     userName: 'Captain'
   }
-]
+];
 
-users.forEach(user => {
-  axios
-    .post(signupApi, user)
-    .then(response => console.log(response))
-    .catch(error => console.log(error))
-})
+(async () => {
+  try {
+    for (const user of users) {
+      try {
+        const res = await axios.post(signupApi, user);
+        console.log(`User created: ${res.data.body.firstName} ${res.data.body.lastName}`);
+      } catch (error) {
+        if (error.response && error.response.data.message.includes('Email already exist')) {
+          console.log(`${user.email}`);
+        } else {
+          console.error(`Error creating user ${user.email}:`, error.response ? error.response.data : error.message);
+        }
+      }
+    }
+
+    console.log('Population terminée !');
+    process.exit(0);
+  } catch (error) {
+    console.error('Error populating users:', error.message);
+    process.exit(1);
+  }
+})();
