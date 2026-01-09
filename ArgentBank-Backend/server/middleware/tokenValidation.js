@@ -1,25 +1,28 @@
 const jwt = require('jsonwebtoken')
-const { restart } = require('nodemon')
 
 module.exports.validateToken = (req, res, next) => {
-  let response = {}
-
   try {
     if (!req.headers.authorization) {
-      throw new Error('Token is missing from header')
+      return res.status(401).send({
+        status: 401,
+        message: 'Token missing'
+      })
     }
 
-    const userToken = req.headers.authorization.split('Bearer')[1].trim()
+    const token = req.headers.authorization.split('Bearer ')[1]
+
     const decodedToken = jwt.verify(
-      userToken,
+      token,
       process.env.SECRET_KEY || 'default-secret-key'
     )
-    return next()
-  } catch (error) {
-    console.error('Error in tokenValidation.js', error)
-    response.status = 401
-    response.message = error.message
-  }
 
-  return res.status(response.status).send(response)
+    req.user = decodedToken
+
+    next()
+  } catch (error) {
+    return res.status(401).send({
+      status: 401,
+      message: 'Invalid token'
+    })
+  }
 }
