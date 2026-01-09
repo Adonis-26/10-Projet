@@ -2,11 +2,13 @@ const User = require('../database/models/userModel')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
+const SECRET_KEY = process.env.SECRET_KEY || 'default-secret-key'
+
+// ==================== CREATE USER ====================
 module.exports.createUser = async serviceData => {
-  console.log(serviceData)
   try {
-    const user = await User.findOne({ email: serviceData.email })
-    if (user) {
+    const existingUser = await User.findOne({ email: serviceData.email })
+    if (existingUser) {
       throw new Error('Email already exists')
     }
 
@@ -19,79 +21,83 @@ module.exports.createUser = async serviceData => {
       lastName: serviceData.lastName,
       userName: serviceData.userName
     })
-  console.log(newUser)
-    let result = await newUser.save()
 
-    return result
+    return await newUser.save()
   } catch (error) {
-    console.error('Error in userService.js', error)
-    throw new Error(error)
+    console.error('Error in createUser', error.message)
+    throw error
   }
 }
 
-module.exports.getUserProfile = async serviceData => {
-  try {
-    const jwtToken = serviceData.headers.authorization.split('Bearer')[1].trim()
-    const decodedJwtToken = jwt.decode(jwtToken)
-    const user = await User.findOne({ _id: decodedJwtToken.id })
-
-    if (!user) {
-      throw new Error('User not found!')
-    }
-
-    return user.toObject()
-  } catch (error) {
-    console.error('Error in userService.js', error)
-    throw new Error(error)
-  }
-}
-
+// ==================== LOGIN USER ====================
 module.exports.loginUser = async serviceData => {
   try {
     const user = await User.findOne({ email: serviceData.email })
-
     if (!user) {
-      throw new Error('User not found!')
+      throw new Error('User not found')
     }
 
-    const isValid = await bcrypt.compare(serviceData.password, user.password)
+    const isValidPassword = await bcrypt.compare(
+      serviceData.password,
+      user.password
+    )
 
-    if (!isValid) {
-      throw new Error('Password is invalid')
+    if (!isValidPassword) {
+      throw new Error('Invalid password')
     }
 
     const token = jwt.sign(
       { id: user._id },
-      process.env.SECRET_KEY || 'default-secret-key',
+      SECRET_KEY,
       { expiresIn: '1d' }
     )
 
     return { token }
   } catch (error) {
-    console.error('Error in userService.js', error)
-    throw new Error(error)
+    console.error('Error in loginUser', error.message)
+    throw error
   }
 }
 
-module.exports.updateUserProfile = async serviceData => {
+// ==================== GET USER PROFILE ====================
+module.exports.getUserProfile = async serviceData => {
   try {
-    const jwtToken = serviceData.headers.authorization.split('Bearer')[1].trim()
-    const decodedJwtToken = jwt.decode(jwtToken)
-    const user = await User.findOneAndUpdate(
-      { _id: decodedJwtToken.id },
-      {
-        userName: serviceData.body.userName
-      },
-      { new: true }
-    )
+    const token = serviceData.headers.authorization.split('Bearer')[1].trim()
 
+    const decodedToken = jwt.verify(token, SECRET_KEY)
+
+    const user = await User.findById(decodedToken.id).select('-password')
     if (!user) {
-      throw new Error('User not found!')
+      throw new Error('User not found')
     }
 
     return user.toObject()
   } catch (error) {
-    console.error('Error in userService.js', error)
-    throw new Error(error)
+    console.error('Error in getUserProfile', error.message)
+    throw error
+  }
+}
+
+// ==================== UPDATE USER PROFILE ====================
+module.exports.updateUserProfile = async serviceData => {
+  try {
+    const token = serviceData.headers.authorization.split('Bearer')[1].trim()
+
+    const decodedToken = jwt.verify(token, SECRET_KEY)
+
+    const user = await User.findByIdAndUpdate(
+      decodedToken.id,
+      { userName: serviceData.body.userName },
+      { new: true }
+    ).select('-password')
+
+    if (!user) {
+      throw new Error('User not found')
+    }
+
+    return user.toObject()
+  } catch (error) {
+    console.error('Error in updateUserProfile', error.message)
+    throw error
   }
 }
