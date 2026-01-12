@@ -79,25 +79,9 @@ module.exports.getUserProfile = async serviceData => {
 }
 
 // ==================== UPDATE USER PROFILE ====================
-module.exports.updateUserProfile = async serviceData => {
-  try {
-    const token = serviceData.headers.authorization.split('Bearer')[1].trim()
-
-    const decodedToken = jwt.verify(token, SECRET_KEY)
-
-    const user = await User.findByIdAndUpdate(
-      decodedToken.id,
-      { userName: serviceData.body.userName },
-      { new: true }
-    ).select('-password')
-
-    if (!user) {
-      throw new Error('User not found')
-    }
-
-    return user.toObject()
-  } catch (error) {
-    console.error('Error in updateUserProfile', error.message)
-    throw error
-  }
+module.exports.getUserProfile = async req => {
+  const user = await User.findById(req.user.id).select('-password')
+  if (!user) throw new Error('User not found')
+  return user
 }
+

@@ -1,69 +1,40 @@
 const userService = require('../services/userService')
 
 module.exports.createUser = async (req, res) => {
-  let response = {}
-
   try {
-    const responseFromService = await userService.createUser(req.body)
-    response.status = 200
-    response.message = 'User successfully created'
-    response.body = responseFromService
+    const user = await userService.createUser(req.body)
+    res.status(200).send({ body: user })
   } catch (error) {
-    console.error('Something went wrong in userController.js', error)
-    response.status = 400
-    response.message = error.message
+    res.status(400).send({ message: error.message })
   }
-
-  return res.status(response.status).send(response)
 }
 
 module.exports.loginUser = async (req, res) => {
-  let response = {}
-
   try {
-    const responseFromService = await userService.loginUser(req.body)
-    response.status = 200
-    response.message = 'User successfully logged in'
-    response.body = responseFromService
+    const token = await userService.loginUser(req.body)
+    res.status(200).send({ body: token })
   } catch (error) {
-    console.error('Error in loginUser (userController.js)')
-    response.status = 400
-    response.message = error.message
+    res.status(400).send({ message: error.message })
   }
-
-  return res.status(response.status).send(response)
 }
 
 module.exports.getUserProfile = async (req, res) => {
-  let response = {}
-
   try {
-    const responseFromService = await userService.getUserProfile(req)
-    response.status = 200
-    response.message = 'Successfully got user profile data'
-    response.body = responseFromService
+    const user = await userService.getUserProfile(req.user.id)
+    res.status(200).send({ body: user })
   } catch (error) {
-    console.log('Error in userController.js')
-    response.status = 400
-    response.message = error.message
+    res.status(400).send({ message: error.message })
   }
-
-  return res.status(response.status).send(response)
 }
 
 module.exports.updateUserProfile = async (req, res) => {
-  let response = {}
-
   try {
-    const responseFromService = await userService.updateUserProfile(req)
-    response.status = 200
-    response.message = 'Successfully updated user profile data'
-    response.body = responseFromService
+    const user = await userService.updateUserProfile(
+      req.user.id,
+      req.body
+    )
+    res.status(200).send({ body: user })
   } catch (error) {
-    console.log('Error in updateUserProfile - userController.js')
-    response.status = 400
-    response.message = error.message
+    res.status(400).send({ message: error.message })
   }
-
-  return res.status(response.status).send(response)
 }
