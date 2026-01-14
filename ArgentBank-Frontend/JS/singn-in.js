@@ -24,7 +24,7 @@ form.addEventListener('submit', async (e) => {
       throw new Error(data.message || 'Login failed')
     }
 
-    localStorage.setItem('token', data.body.token)
+    localStorage.setItem('token', data.token)
 
     window.location.href = 'user.html'
   } catch (error) {
