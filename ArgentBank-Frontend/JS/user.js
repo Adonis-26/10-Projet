@@ -5,30 +5,35 @@ if (!token) {
 }
 
 fetch('http://localhost:3001/api/v1/user/profile', {
-  method: 'GET',
+  method: 'POST',
   headers: {
-    Authorization: `Bearer ${token}`,
+    'Authorization': `Bearer ${token}`,
     'Content-Type': 'application/json'
-  }
+    console.log(token)
+  },
+  body: JSON.stringify({})
 })
-  .then(res => res.json())
-  .then(data => {
-    if (!data.body) {
+  .then(res => {
+    if (!res.ok) {
       throw new Error('Unauthorized')
     }
-
+    return res.json()
+  })
+  .then(data => {
     const user = data.body
+
     document.getElementById('welcome-name').textContent =
       `${user.firstName} ${user.lastName}`
 
     document.getElementById('nav-username').innerHTML =
       `<i class="fa fa-user-circle"></i> ${user.firstName}`
   })
-  .catch(() => {
+  .catch((err) => {
+    console.error(err)
     localStorage.removeItem('token')
     window.location.href = 'sign-in.html'
   })
-  
+
 document.getElementById('logout').addEventListener('click', () => {
   localStorage.removeItem('token')
   window.location.href = 'index.html'
