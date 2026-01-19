@@ -1,7 +1,9 @@
+// 1️⃣ Lire le token stocké au login
 const token = localStorage.getItem('token')
 
 if (!token) {
   window.location.href = 'sign-in.html'
+  return
 }
 
 fetch('http://localhost:3001/api/v1/user/profile', {
@@ -9,7 +11,6 @@ fetch('http://localhost:3001/api/v1/user/profile', {
   headers: {
     'Authorization': `Bearer ${token}`,
     'Content-Type': 'application/json'
-    console.log(token)
   },
   body: JSON.stringify({})
 })
@@ -28,10 +29,13 @@ fetch('http://localhost:3001/api/v1/user/profile', {
     document.getElementById('nav-username').innerHTML =
       `<i class="fa fa-user-circle"></i> ${user.firstName}`
   })
-  .catch((err) => {
-    console.error(err)
-    localStorage.removeItem('token')
-    window.location.href = 'sign-in.html'
+  .catch(err => {
+    console.error('PROFILE ERROR:', err)
+
+    if (err.message === 'Unauthorized') {
+      localStorage.removeItem('token')
+      window.location.href = 'sign-in.html'
+    }
   })
 
 document.getElementById('logout').addEventListener('click', () => {
