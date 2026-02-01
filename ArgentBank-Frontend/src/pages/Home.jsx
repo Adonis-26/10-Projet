@@ -1,6 +1,6 @@
 import React from 'react'
 import './Home.scss'
-import Body from '../../components/Body/Body'
+import Body from '../components/Body/Body'
 
 function Home() {
   return (

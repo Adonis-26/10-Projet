@@ -2,7 +2,7 @@
 const token = localStorage.getItem('token')
 
 if (!token) {
-  window.location.href = 'sign-in.html'
+  window.location.href = 'login.html'
   return
 }
 
@@ -34,7 +34,7 @@ fetch('http://localhost:3001/api/v1/user/profile', {
 
     if (err.message === 'Unauthorized') {
       localStorage.removeItem('token')
-      window.location.href = 'sign-in.html'
+      window.location.href = 'login'
     }
   })
 
