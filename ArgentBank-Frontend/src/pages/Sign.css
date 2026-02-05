@@ -1,14 +1,11 @@
-
-
 .bg-dark {
   background-color: #12002b;
   min-height: 100vh;
-   display: flex;
+  display: flex;
   justify-content: center;
   align-items: flex-start;
   padding-top: 50px;
 }
-
 
 .sign-in-button {
   display: block;
@@ -28,8 +25,6 @@
   width: 300px;
   padding: 2rem;
   position: static;
- 
-
 }
 
 .sign-in-icon {
@@ -58,4 +53,4 @@
 .input-wrapper input {
   padding: 5px;
   font-size: 1.2rem;
-}
+}/*# sourceMappingURL=Sign.css.map */
