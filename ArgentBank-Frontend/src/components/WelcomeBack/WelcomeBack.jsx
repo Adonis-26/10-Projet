@@ -1,6 +1,7 @@
 import React from 'react'
+import './WelcomeBack.css'
 
-function WebcomeBack() {
+function WelcomeBack() {
   return (
     <div class="header">
         <h1>Welcome back<br /> Name !</h1>
@@ -9,4 +10,4 @@ function WebcomeBack() {
   )
 }
 
-export default WebcomeBack
+export default WelcomeBack
