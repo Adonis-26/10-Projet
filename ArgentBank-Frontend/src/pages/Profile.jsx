@@ -1,5 +1,4 @@
 import React from 'react'
-import '../components/WelcomeBack/WelcomeBack'
 import './Profile.scss'
 
 
@@ -37,8 +36,11 @@ function Profile() {
   })
   return (
     <div>
-      <main className="mainProfile bg-dark">
-        <WelcomeBack />
+      <main className="mainProfile bg-darkProfile">
+        <div className="header">
+          <h1>Welcome back<br /> Name !</h1>
+          <button className="edit-button">Edit Name</button>
+        </div>
         <h2 className="sr-only">Accounts</h2>
         <section className="account">
           <div className="account-content-wrapper">
