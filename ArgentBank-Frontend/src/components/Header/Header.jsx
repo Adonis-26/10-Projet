@@ -1,11 +1,19 @@
 import React from 'react'
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import './Header.scss'
 
 function Header() {
+  const navigate = useNavigate()
+  const token = localStorage.getItem("token")
+
+  const handleLogout = () => {
+    localStorage.removeItem("token")
+    navigate("/")
+  }
+
   return (
-       <nav className="main-nav">
-      <Link className="main-nav-logo" to="./">
+    <nav className="main-nav">
+      <Link className="main-nav-logo" to="/">
         <img
           className="main-nav-logo-image"
           src="/img/argentBankLogo.png"
@@ -13,11 +21,19 @@ function Header() {
         />
         <h1 className="sr-only">Argent Bank</h1>
       </Link>
+
       <div>
-        <Link className="main-nav-item" to="./sign">
-          <i className="fa fa-user-circle"></i>
-          Sign In
-        </Link>
+        {token ? (
+          <Link className="main-nav-item" onClick={handleLogout}>
+            <i className="fa fa-sign-out"></i>
+            Sign Out
+          </Link>
+        ) : (
+          <Link className="main-nav-item" to="/sign">
+            <i className="fa fa-user-circle"></i>
+            Sign In
+          </Link>
+        )}
       </div>
     </nav>
   )
