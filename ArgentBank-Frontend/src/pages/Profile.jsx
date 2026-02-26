@@ -1,15 +1,16 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 import './Profile.scss'
 
 function Profile() {
 
-  const form = document.querySelector('form')
+ const navigate = useNavigate()
 
-  form.addEventListener('submit', async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
 
-    const email = document.getElementById('email').value
-    const password = document.getElementById('password').value
+    const email = e.target.email.value
+    const password = e.target.password.value
 
     try {
       const response = await fetch('http://localhost:3001/api/v1/user/login', {
@@ -26,13 +27,12 @@ function Profile() {
 
       localStorage.setItem('token', data.body.token)
 
-      navigate("/profile")
-
+      navigate('/profile')
     } catch (error) {
       console.error(error)
       alert('Erreur de connexion : ' + error.message)
     }
-  })
+  }
   return (
     <div>
       <main className="mainProfile bg-darkProfile">
