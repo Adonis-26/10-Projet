@@ -1,10 +1,17 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 import './Profile.scss'
 
 function Profile() {
 
- const navigate = useNavigate()
+  const token = useSelector((state) => state.user.token)
+  const isAuthenticated = useSelector((state) => state.user.isAuthenticated)
+
+  console.log("Redux token :", token)
+  console.log("Redux isAuthenticated :", isAuthenticated)
+
+  const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
