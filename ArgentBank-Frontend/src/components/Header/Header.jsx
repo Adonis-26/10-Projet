@@ -1,6 +1,6 @@
-import React from 'react'
+import React from "react"
 import { Link, useNavigate } from "react-router-dom"
-import './Header.scss'
+import "./Header.scss"
 
 function Header() {
   const navigate = useNavigate()
@@ -24,10 +24,17 @@ function Header() {
 
       <div>
         {token ? (
-          <Link className="main-nav-item" onClick={handleLogout}>
-            <i className="fa fa-sign-out"></i>
-            Sign Out
-          </Link>
+          <>
+            <Link className="main-nav-item" to="/profile">
+              <i className="fa fa-user-circle"></i> {" "}
+              user
+            </Link>
+
+            <Link className="main-nav-item" onClick={handleLogout}>
+              <i class="fa fa-sign-out"></i>
+              Sign Out
+            </Link>
+          </>
         ) : (
           <Link className="main-nav-item" to="/sign">
             <i className="fa fa-user-circle"></i>
