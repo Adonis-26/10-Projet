@@ -1,7 +1,8 @@
 import React from "react"
 import { useNavigate } from "react-router-dom"
 import { useDispatch } from "react-redux"
-import { loginSuccess } from "../store/userSlice"
+import { loginSuccess, setUserProfile } from "../store/userSlice"
+import { loginUser, getUserProfile } from "../API/apiUser"
 import "./Sign.scss"
 
 function Sign() {
@@ -15,29 +16,22 @@ function Sign() {
     const password = e.target.password.value
 
     try {
-      const response = await fetch(
-        "http://localhost:3001/api/v1/user/login",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password }),
-        }
-      )
+    
+      const token = await loginUser(email, password)
+      console.log("Token reçu :", token)
+      dispatch(loginSuccess(token))
 
-      const data = await response.json()
+      const profile = await getUserProfile(token)
 
-      if (!response.ok) {
-        throw new Error(data.message || "Login failed")
-      }
-
-      dispatch(loginSuccess(data.body.token))
-
-      localStorage.setItem("token", data.body.token)
+      dispatch(setUserProfile({
+        firstName: profile.firstName,
+        lastName: profile.lastName,
+      }))
 
       navigate("/profile")
 
     } catch (error) {
-      console.error(error)
+      console.error("Erreur login :", error.message)
       alert("Erreur de connexion : " + error.message)
     }
   }
@@ -46,18 +40,15 @@ function Sign() {
     <main className="main bg-dark">
       <section className="sign-in-content">
         <h1>Sign In</h1>
-
         <form onSubmit={handleSubmit}>
           <div className="input-wrapper">
             <label>Email</label>
             <input type="text" name="email" required />
           </div>
-
           <div className="input-wrapper">
             <label>Password</label>
             <input type="password" name="password" required />
           </div>
-
           <button type="submit" className="sign-in-button">
             Sign In
           </button>

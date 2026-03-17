@@ -1,14 +1,19 @@
 import React from "react"
 import { Link, useNavigate } from "react-router-dom"
+import { useSelector, useDispatch } from "react-redux"
+import { logout } from "../../store/userSlice"
 import "./Header.scss"
 
 function Header() {
   const navigate = useNavigate()
-  const token = localStorage.getItem("token")
+  const dispatch = useDispatch()
+
+  const isAuthenticated = useSelector((state) => state.user.isAuthenticated)
+  const firstName = useSelector((state) => state.user.firstName)
 
   const handleLogout = () => {
-    localStorage.removeItem("token")
-    navigate("/")
+    dispatch(logout())  
+    navigate("/")      
   }
 
   return (
@@ -23,21 +28,21 @@ function Header() {
       </Link>
 
       <div>
-        {token ? (
+        {isAuthenticated ? (
           <>
             <Link className="main-nav-item" to="/profile">
-              <i className="fa fa-user-circle"></i> {" "}
-              user
+              <i className="fa fa-user-circle"></i>{" "}
+              {firstName}
             </Link>
 
             <Link className="main-nav-item" onClick={handleLogout}>
-              <i class="fa fa-sign-out"></i>
+              <i className="fa fa-sign-out"></i>{" "}
               Sign Out
             </Link>
           </>
         ) : (
           <Link className="main-nav-item" to="/sign">
-            <i className="fa fa-user-circle"></i>
+            <i className="fa fa-user-circle"></i>{" "}
             Sign In
           </Link>
         )}
