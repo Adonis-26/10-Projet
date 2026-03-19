@@ -24,3 +24,17 @@ export const getUserProfile = async (token) => {
   if (!response.ok) throw new Error(data.message)
   return data.body
 }
+
+export const updateUserName = async (token, userName) => {
+  const response = await fetch(`${BASE_URL}/user/profile`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ userName }),
+  })
+  const data = await response.json()
+  if (!response.ok) throw new Error(data.message)
+  return data.body
+}
