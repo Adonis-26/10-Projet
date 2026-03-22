@@ -58,6 +58,7 @@ module.exports.updateUserProfile = async (userId, data) => {
       { firstName: data.firstName, lastName: data.lastName, userName: data.userName },
       { new: true }
     ).select('-password')
+    console.log("User trouvé :", user) 
     if (!user) throw new Error('User not found')
     return user.toObject()
   } catch (error) {

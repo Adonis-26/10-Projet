@@ -1,52 +1,70 @@
-import React from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import React, { useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { setUserProfile } from '../store/userSlice'
+import { updateUserName } from '../API/apiUser'
 import './Profile.scss'
 
 function Profile() {
+  const dispatch = useDispatch()
 
+  // Récupère les données du store Redux
   const token = useSelector((state) => state.user.token)
-  const isAuthenticated = useSelector((state) => state.user.isAuthenticated)
+  const firstName = useSelector((state) => state.user.firstName)
+  const lastName = useSelector((state) => state.user.lastName)
+  const userName = useSelector((state) => state.user.userName)
 
-  console.log("Redux token :", token)
-  console.log("Redux isAuthenticated :", isAuthenticated)
+  // Contrôle l'affichage du formulaire
+  const [isEditing, setIsEditing] = useState(false)
+  // Valeur saisie dans le champ userName
+  const [newUserName, setNewUserName] = useState(userName || '')
 
-  const navigate = useNavigate()
-
-  const handleSubmit = async (e) => {
+  const handleSave = async (e) => {
     e.preventDefault()
-
-    const email = e.target.email.value
-    const password = e.target.password.value
-
     try {
-      const response = await fetch('http://localhost:3001/api/v1/user/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      })
+      const updatedUser = await updateUserName(token, newUserName)
 
-      const data = await response.json()
+      dispatch(setUserProfile({
+        firstName: updatedUser.firstName,
+        lastName: updatedUser.lastName,
+        userName: updatedUser.userName,
+      }))
 
-      if (!response.ok) {
-        throw new Error(data.message || 'Login failed')
-      }
-
-      localStorage.setItem('token', data.body.token)
-
-      navigate('/profile')
+      setIsEditing(false)
     } catch (error) {
-      console.error(error)
-      alert('Erreur de connexion : ' + error.message)
+      console.error('Erreur mise à jour :', error.message)
+      alert('Erreur : ' + error.message)
     }
   }
+
   return (
     <div>
       <main className="mainProfile bg-darkProfile">
         <div className="header">
-          <h1>Welcome back<br /> Name !</h1>
-          <button className="edit-button">Edit Name</button>
+          <h1>Welcome back<br />{firstName} {lastName}</h1>
+
+          {isEditing ? (
+            <form onSubmit={handleSave}>
+              <input
+                type="text"
+                value={newUserName}
+                onChange={(e) => setNewUserName(e.target.value)}
+                placeholder="New username"
+              />
+              <button type="submit">Save</button>
+              <button type="button" onClick={() => {
+                setNewUserName(userName || '') // ← remet la valeur d'origine
+                setIsEditing(false)
+              }}>
+                Cancel
+              </button>
+            </form>
+          ) : (
+            <button className="edit-button" onClick={() => setIsEditing(true)}>
+              Edit Name
+            </button>
+          )}
         </div>
+
         <h2 className="sr-only">Accounts</h2>
         <section className="account">
           <div className="account-content-wrapper">
