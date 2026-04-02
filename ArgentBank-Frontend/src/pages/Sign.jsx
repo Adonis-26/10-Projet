@@ -26,6 +26,7 @@ function Sign() {
       dispatch(setUserProfile({
         firstName: profile.firstName,
         lastName: profile.lastName,
+        userName: profile.userName,
       }))
 
       navigate("/profile")

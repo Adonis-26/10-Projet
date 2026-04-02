@@ -7,22 +7,22 @@ import './Profile.scss'
 function Profile() {
   const dispatch = useDispatch()
 
-  // Récupère les données du store Redux
   const token = useSelector((state) => state.user.token)
   const firstName = useSelector((state) => state.user.firstName)
   const lastName = useSelector((state) => state.user.lastName)
   const userName = useSelector((state) => state.user.userName)
 
-  // Contrôle l'affichage du formulaire
   const [isEditing, setIsEditing] = useState(false)
-  // Valeur saisie dans le champ userName
+
+  const [newFirstName, setNewFirstName] = useState(firstName || '')
+  const [newLastName, setNewLastName] = useState(lastName || '')
   const [newUserName, setNewUserName] = useState(userName || '')
 
   const handleSave = async (e) => {
     e.preventDefault()
     try {
-      const updatedUser = await updateUserName(token, newUserName)
-
+      const updatedUser = await updateUserName(token, newFirstName, newLastName, newUserName)
+      console.log("Utilisateur mis à jour :", updatedUser)
       dispatch(setUserProfile({
         firstName: updatedUser.firstName,
         lastName: updatedUser.lastName,
@@ -36,6 +36,13 @@ function Profile() {
     }
   }
 
+  const handleCancel = () => {
+    setNewFirstName(firstName || '')
+    setNewLastName(lastName || '')
+    setNewUserName(userName || '')
+    setIsEditing(false)
+  }
+
   return (
     <div>
       <main className="mainProfile bg-darkProfile">
@@ -44,17 +51,35 @@ function Profile() {
 
           {isEditing ? (
             <form onSubmit={handleSave}>
-              <input
-                type="text"
-                value={newUserName}
-                onChange={(e) => setNewUserName(e.target.value)}
-                placeholder="New username"
-              />
+              <div>
+                <label>First Name</label>
+                <input
+                  type="text"
+                  value={newFirstName}
+                  onChange={(e) => setNewFirstName(e.target.value)}
+                  placeholder="First name"
+                />
+              </div>
+              <div>
+                <label>Last Name</label>
+                <input
+                  type="text"
+                  value={newLastName}
+                  onChange={(e) => setNewLastName(e.target.value)}
+                  placeholder="Last name"
+                />
+              </div>
+              <div>
+                <label>User Name</label>
+                <input
+                  type="text"
+                  value={newUserName}
+                  onChange={(e) => setNewUserName(e.target.value)}
+                  placeholder="Username"
+                />
+              </div>
               <button type="submit">Save</button>
-              <button type="button" onClick={() => {
-                setNewUserName(userName || '') // ← remet la valeur d'origine
-                setIsEditing(false)
-              }}>
+              <button type="button" onClick={handleCancel}>
                 Cancel
               </button>
             </form>
