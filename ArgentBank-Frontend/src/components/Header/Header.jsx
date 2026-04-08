@@ -12,8 +12,8 @@ function Header() {
   const userName = useSelector((state) => state.user.userName)
 
   const handleLogout = () => {
-    dispatch(logout())  
-    navigate("/")      
+    dispatch(logout())
+    navigate("/")
   }
 
   return (
@@ -27,7 +27,7 @@ function Header() {
         <h1 className="sr-only">Argent Bank</h1>
       </Link>
 
-      <div>
+      <div className="nav-profile-out">
         {isAuthenticated ? (
           <>
             <Link className="main-nav-item" to="/profile">
@@ -35,7 +35,11 @@ function Header() {
               {userName}
             </Link>
 
-            <Link className="main-nav-item" onClick={handleLogout}>
+            <Link
+              type="button"
+              className="main-nav-item main-nav-logo logout-btn main-nav-logo" to="/"
+              onClick={handleLogout}
+            >
               <i className="fa fa-sign-out"></i>{" "}
               Sign Out
             </Link>
