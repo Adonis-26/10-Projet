@@ -35,6 +35,7 @@ export const updateUserName = async (token, userName) => {
     body: JSON.stringify({ userName }),
   })
   const data = await response.json()
+  console.log("Réponse updateUserName :", data)
   if (!response.ok) throw new Error(data.message)
   return data.body
 }

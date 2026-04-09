@@ -14,18 +14,16 @@ function Profile() {
 
   const [isEditing, setIsEditing] = useState(false)
 
-  const [newFirstName, setNewFirstName] = useState(firstName || '')
-  const [newLastName, setNewLastName] = useState(lastName || '')
   const [newUserName, setNewUserName] = useState(userName || '')
 
   const handleSave = async (e) => {
     e.preventDefault()
     try {
-      const updatedUser = await updateUserName(token, newFirstName, newLastName, newUserName)
+      const updatedUser = await updateUserName(token, newUserName)
       console.log("Utilisateur mis à jour :", updatedUser)
       dispatch(setUserProfile({
-        firstName: updatedUser.firstName,
-        lastName: updatedUser.lastName,
+        firstName: firstName,
+        lastName: lastName,
         userName: updatedUser.userName,
       }))
 
@@ -37,8 +35,6 @@ function Profile() {
   }
 
   const handleCancel = () => {
-    setNewFirstName(firstName || '')
-    setNewLastName(lastName || '')
     setNewUserName(userName || '')
     setIsEditing(false)
   }
@@ -52,34 +48,16 @@ function Profile() {
           {isEditing ? (
             <form onSubmit={handleSave}>
               <div>
-                <label>First Name</label>
-                <input
-                  type="text"
-                  value={newFirstName}
-                  onChange={(e) => setNewFirstName(e.target.value)}
-                  placeholder="First name"
-                />
-              </div>
-              <div>
-                <label>Last Name</label>
-                <input
-                  type="text"
-                  value={newLastName}
-                  onChange={(e) => setNewLastName(e.target.value)}
-                  placeholder="Last name"
-                />
-              </div>
-              <div>
-                <label>User Name</label>
-                <input
+                <label>UserName {""}</label>
+                <input className='input-username'
                   type="text"
                   value={newUserName}
                   onChange={(e) => setNewUserName(e.target.value)}
                   placeholder="Username"
                 />
               </div>
-              <button type="submit">Save</button>
-              <button type="button" onClick={handleCancel}>
+              <button className="edit-button-modification" type="submit">Save</button>
+              <button className="edit-button-modification" type="button" onClick={handleCancel} style={{ marginLeft: "10px" }}>
                 Cancel
               </button>
             </form>
