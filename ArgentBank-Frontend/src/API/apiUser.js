@@ -25,14 +25,14 @@ export const getUserProfile = async (token) => {
   return data.body
 }
 
-export const updateUserName = async (token, userName) => {
+export const updateUserName = async (token, firstName, lastName, userName) => {
   const response = await fetch(`${BASE_URL}/user/profile`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({ userName }),
+    body: JSON.stringify({ firstName, lastName, userName }),
   })
   const data = await response.json()
   console.log("Réponse updateUserName :", data)

@@ -19,7 +19,7 @@ function Profile() {
   const handleSave = async (e) => {
     e.preventDefault()
     try {
-      const updatedUser = await updateUserName(token, newUserName)
+      const updatedUser = await updateUserName(token, firstName, lastName, newUserName)
       console.log("Utilisateur mis à jour :", updatedUser)
       dispatch(setUserProfile({
         firstName: firstName,
