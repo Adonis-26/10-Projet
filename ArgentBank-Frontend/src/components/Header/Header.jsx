@@ -6,7 +6,6 @@ import "./Header.scss"
 
 const logo = [
   {
-    id: 1,
     icon: './img/argentBankLogo.webp',
     alt: 'Argent Bank Logo'
   } ]
@@ -26,13 +25,11 @@ function Header() {
   return (
     <nav className="main-nav">
       <Link className="main-nav-logo" to="/">
-      {logo.map((logo) => (
         <img
           className="main-nav-logo-image"
           src={logo.icon}
           alt={logo.alt}
         />
-      ))}
         <h1 className="sr-only">Argent Bank</h1>
       </Link>
 

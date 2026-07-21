@@ -11,7 +11,6 @@ function App() {
             <Routes>
                 <Route element={<Layout />}>
                     <Route path="/" element={<Home />} />
-                    <Route path="/home" element={<Home />} />
                     <Route path="/sign" element={<Sign />} />
                     <Route path="/profile" element={
                         <AuthGuard>
