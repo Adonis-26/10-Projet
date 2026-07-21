@@ -4,11 +4,10 @@ import { useSelector, useDispatch } from "react-redux"
 import { logout } from "../../store/userSlice"
 import "./Header.scss"
 
-const logo = [
-  {
-    icon: './img/argentBankLogo.webp',
-    alt: 'Argent Bank Logo'
-  } ]
+const logo = {
+  icon: '/img/argentBankLogo.webp',
+  alt: 'Argent Bank Logo',
+}
 
 function Header() {
   const navigate = useNavigate()
@@ -43,7 +42,8 @@ function Header() {
 
             <Link
               type="button"
-              className="main-nav-item main-nav-logo logout-btn main-nav-logo" to="/"
+              className="main-nav-item main-nav-logo logout-btn main-nav-logo"
+              to="/"
               onClick={handleLogout}
             >
               <i className="fa fa-sign-out"></i>{" "}
