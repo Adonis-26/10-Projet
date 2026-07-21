@@ -3,6 +3,7 @@ import Layout from "./components/Layout/Layout.jsx"
 import Profile from "./pages/Profile.jsx"
 import Sign from "./pages/Sign.jsx"
 import Home from "./pages/Home.jsx"
+import AuthGuard from "./helpers/AuthGuard.jsx"
 
 function App() {
     return (
@@ -11,7 +12,11 @@ function App() {
                 <Route element={<Layout />}>
                     <Route path="/" element={<Home />} />
                     <Route path="/sign" element={<Sign />} />
-                    <Route path="/profile" element={<Profile />} />
+                    <Route path="/profile" element={
+                        <AuthGuard>
+                            <Profile />
+                        </AuthGuard>
+                     }/>
                 </Route>
             </Routes>
         </BrowserRouter>
