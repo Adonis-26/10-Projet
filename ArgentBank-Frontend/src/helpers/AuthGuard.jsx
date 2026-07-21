@@ -1,13 +1,14 @@
-import { Navigate } from "react-router-dom";
+import { Navigate } from "react-router-dom"
+import { useSelector } from "react-redux"
 
+const AuthGuard = ({ children }) => {
+  const isAuthenticated = useSelector((state) => state.user.isAuthenticated)
 
-    const AuthGuard = ({children}) => {
-        let logged = false 
-    
-        if(!logged){
-            return <Navigate to="/sign"/>
-        }
-        return children
-};
+  if (!isAuthenticated) {
+    return <Navigate to="/sign" replace />
+  }
 
-export default AuthGuard;
+  return children
+}
+
+export default AuthGuard
