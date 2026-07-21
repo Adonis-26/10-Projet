@@ -30,9 +30,7 @@ function Sign() {
     if (!password) {
       newErrors.password = "Le mot de passe est requis"
       hasError = true
-    }else { newErrors.password = "Le mot de passe est incorrect"
-      hasError = true }
-
+    }
     if (hasError) {
       setErrors(newErrors)
       return
