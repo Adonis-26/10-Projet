@@ -1,12 +1,12 @@
 
 .features {
   display: flex;
-  flex-direction: column;
 }
 
-@media (min-width: 920px) {
+@media (max-width: 920px) {
   .features {
-    flex-direction: row;
+    flex-direction: column;
+    
   }
 }
 
